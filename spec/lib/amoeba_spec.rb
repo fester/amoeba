@@ -33,7 +33,7 @@ describe "amoeba" do
       start_postnote_count = rs["note_count"]
 
       new_post.save
-      new_post.errors.messages.length.should == 0
+      new_post.errors.length.should == 0
 
       end_account_count = Account.all.count
       end_history_count = History.all.count
@@ -93,7 +93,7 @@ describe "amoeba" do
       old_author = Author.find(1)
       new_author = old_author.dup
       new_author.save
-      new_author.errors.messages.length.should == 0
+      new_author.errors.length.should == 0
       new_author.posts.first.custom_things.length.should == 3
       new_author.posts.first.custom_things.select{ |ct| ct.value == [] }.length.should == 1
       new_author.posts.first.custom_things.select{ |ct| ct.value == [1,2]}.length.should == 1
@@ -110,7 +110,7 @@ describe "amoeba" do
 
       new_product = old_product.dup
       new_product.save
-      new_product.errors.messages.length.should == 0
+      new_product.errors.length.should == 0
 
       end_image_count = Image.where(:product_id => old_product.id).count
       end_newimage_count = Image.where(:product_id => new_product.id).count
@@ -138,7 +138,7 @@ describe "amoeba" do
 
       new_product = old_product.dup
       new_product.save
-      new_product.errors.messages.length.should == 0
+      new_product.errors.length.should == 0
 
       end_image_count = Image.where(:product_id => old_product.id).count
       end_newimage_count = Image.where(:product_id => new_product.id).count
@@ -165,7 +165,7 @@ describe "amoeba" do
 
       new_product = old_product.dup
       new_product.save
-      new_product.errors.messages.length.should == 0
+      new_product.errors.length.should == 0
 
       end_image_count = Image.where(:product_id => old_product.id).count
       end_newimage_count = Image.where(:product_id => new_product.id).count

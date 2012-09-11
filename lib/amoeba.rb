@@ -323,8 +323,9 @@ module Amoeba
     end
     # }}}
 
-    def dup(options={})
-      @result = super()
+    def dup_with_amoeba(options={})
+      @result = dup_without_amoeba()
+      @result[self.class.primary_key] = nil
 
       # Inherit Parent Settings {{{
       if !amoeba_conf.enabled && parent_amoeba_conf.inherit
@@ -407,6 +408,11 @@ module Amoeba
     end
 
   private
+
+    def reflections
+      self.class.reflections
+    end
+
     # Copy Children {{{
     def amo_process_association(relation_name, settings)
       if not amoeba_conf.known_macros.include?(settings.macro)
@@ -423,7 +429,7 @@ module Amoeba
 
         if not old_obj.nil?
           copy_of_obj = old_obj.dup
-          copy_of_obj[:"#{settings.foreign_key}"] = nil
+          copy_of_obj[:"#{settings.association_foreign_key}"] = nil
 
           @result.send(:"#{relation_name}=", copy_of_obj)
         end
@@ -455,7 +461,7 @@ module Amoeba
 
           self.send(relation_name).each do |old_obj|
             copy_of_obj = old_obj.dup
-            copy_of_obj[:"#{settings.foreign_key}"] = nil
+            copy_of_obj[:"#{settings.association_foreign_key}"] = nil
 
             # associate this new child to the new parent object
             @result.send(relation_name) << copy_of_obj
@@ -520,3 +526,4 @@ end
 
 ActiveRecord::Base.send :extend,  Amoeba::ClassMethods
 ActiveRecord::Base.send :include, Amoeba::InstanceMethods
+ActiveRecord::Base.send :alias_method_chain, :dup, :amoeba
